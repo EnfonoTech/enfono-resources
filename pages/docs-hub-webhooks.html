@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Docs Hub &amp; Webhooks — Enfono Resources</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div class="layout">
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <h2>🔧 Enfono Resources</h2>
+      </div>
+      <div class="sidebar-search">
+        <input type="text" id="nav-search" placeholder="Search pages...">
+      </div>
+      <ul class="nav-list" id="nav-list">
+        <li><a href="/" class="nav-link">Home</a></li>
+        <li><a href="docs-hub-webhooks.html" class="nav-link active">Docs Hub &amp; Webhooks</a></li>
+        <li><a href="brain-mcp.html" class="nav-link">Brain MCP</a></li>
+        <li><a href="deepclaude-mixed.html" class="nav-link">DeepClaude Mixed</a></li>
+        <li><a href="documentation-workflow.html" class="nav-link">Documentation Workflow</a></li>
+      </ul>
+    </nav>
+
+    <main class="content">
+      <h1>Docs Hub &amp; GitHub Webhooks</h1>
+      <p>
+        Docs Hub is Enfono's static documentation hosting platform. Every docs site is a Git repository —
+        push to the configured branch and your changes go live automatically. No FTP, no manual deploys, no server access needed.
+      </p>
+
+      <h2>Architecture</h2>
+
+      <pre><code>GitHub Push
+  │
+  ▼
+POST https://docs.enfonoerp.com/webhook  (HMAC-SHA256 verified)
+  │
+  ▼
+docs-hub-agent  (port 3849 on docs server 161.97.183.143)
+  │
+  ├─ git pull (on matching repo in /opt/docs-hub/sites/)
+  └─ caddy reload  (picks up new static files)
+  │
+  ▼
+Live at: https://{site-name}.docs.enfonoerp.com</code></pre>
+
+      <h2>Key Components</h2>
+
+      <h3>1. Docs Server (161.97.183.143)</h3>
+      <ul>
+        <li><strong>Caddy:</strong> Reverse proxy + automatic HTTPS via Cloudflare DNS-01 challenge</li>
+        <li><strong>docs-hub-agent:</strong> Hono server on port 3849 — handles deploy, delete, and webhook endpoints</li>
+        <li><strong>Site storage:</strong> <code>/opt/docs-hub/sites/{site-name}/</code> — bare Git repos with working trees</li>
+        <li><strong>SSL:</strong> Wildcard cert for <code>*.docs.enfonoerp.com</code></li>
+      </ul>
+
+      <h3>2. Control Server (Server Manager)</h3>
+      <ul>
+        <li><strong>API:</strong> <code>manager.enfonoerp.com/api/docs-hub/sites</code> — CRUD for docs sites</li>
+        <li><strong>Database:</strong> SQLite tracking site metadata, deploy status, webhook configs</li>
+        <li><strong>Agent proxy:</strong> Forwards deploy/delete calls to docs-hub-agent on the docs server</li>
+        <li><strong>Cloudflare DNS:</strong> Auto-creates A records pointing <code>{site}.docs.enfonoerp.com</code> to docs server IP</li>
+      </ul>
+
+      <h3>3. Caddy Routing</h3>
+      <p>Each site gets a Caddy <code>handle</code> block. The agent manages these via <code>/opt/docs-hub/Caddyfile.sites</code>:</p>
+      <pre><code># Auto-managed by docs-hub-agent
+# Site: rmax-docs → /opt/docs-hub/sites/rmax-docs
+
+rmax-docs.docs.enfonoerp.com {
+    root * /opt/docs-hub/sites/rmax-docs
+    file_server
+    encode gzip
+}</code></pre>
+
+      <h2>Auto-Deploy via GitHub Webhooks</h2>
+
+      <h3>How it works</h3>
+      <ol class="steps">
+        <li>
+          <h3>GitHub sends a POST to the webhook URL</h3>
+          <p>Every push to the configured branch triggers a <code>push</code> event. GitHub POSTs a JSON payload to the webhook endpoint.</p>
+        </li>
+        <li>
+          <h3>docs-hub-agent verifies the HMAC-SHA256 signature</h3>
+          <p>The agent computes <code>sha256(hmac, payload)</code> and compares it against the <code>X-Hub-Signature-256</code> header. Rejects unverified requests.</p>
+        </li>
+        <li>
+          <h3>Agent matches the repository name from the payload</h3>
+          <p>Extracts <code>repository.full_name</code> (e.g., <code>EnfonoTech/rmax-docs</code>) and maps it to a configured site.</p>
+        </li>
+        <li>
+          <h3>git pull on the matching site directory</h3>
+          <p>Runs <code>git pull origin {branch}</code> inside <code>/opt/docs-hub/sites/{site-name}/</code>.</p>
+        </li>
+        <li>
+          <h3>Caddy reloads configuration</h3>
+          <p>Static files are refreshed. New content is served immediately.</p>
+        </li>
+      </ol>
+
+      <h3>Webhook URL</h3>
+      <p>Every Docs Hub site uses the same webhook endpoint:</p>
+      <pre><code>https://docs.enfonoerp.com/webhook</code></pre>
+      <p>GitHub delivers the repository name in the payload, so one URL handles all sites.</p>
+
+      <h3>Setting up a webhook in GitHub</h3>
+      <ol class="steps">
+        <li>
+          <h3>Go to your docs repository on GitHub</h3>
+          <p>Navigate to <strong>Settings → Webhooks → Add webhook</strong>.</p>
+        </li>
+        <li>
+          <h3>Configure the webhook</h3>
+          <table>
+            <tr><td><strong>Payload URL</strong></td><td><code>https://docs.enfonoerp.com/webhook</code></td></tr>
+            <tr><td><strong>Content type</strong></td><td><code>application/json</code></td></tr>
+            <tr><td><strong>Secret</strong></td><td>Ask the admin for the webhook secret</td></tr>
+            <tr><td><strong>SSL verification</strong></td><td>Enable</td></tr>
+            <tr><td><strong>Events</strong></td><td>Just the <code>push</code> event</td></tr>
+          </table>
+        </li>
+        <li>
+          <h3>Save and test</h3>
+          <p>After saving, GitHub sends a test ping. Check the "Recent Deliveries" tab for the response. A successful ping returns HTTP 200.</p>
+        </li>
+      </ol>
+
+      <div class="callout callout-warning">
+        <strong>Important:</strong> The webhook secret must match the <code>WEBHOOK_SECRET</code> environment variable on the docs server. Without it, HMAC verification fails and deploys won't trigger.
+      </div>
+
+      <h2>Webhook Security</h2>
+
+      <p>The webhook endpoint implements three layers of verification:</p>
+
+      <table>
+        <thead>
+          <tr><th>Layer</th><th>Mechanism</th><th>What it prevents</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1. HMAC-SHA256</td>
+            <td><code>X-Hub-Signature-256</code> header verified against shared secret</td>
+            <td>Forged payloads, replay attacks from non-GitHub sources</td>
+          </tr>
+          <tr>
+            <td>2. Event type filter</td>
+            <td>Only <code>push</code> events are processed</td>
+            <td>Unwanted triggers from PRs, issues, releases</td>
+          </tr>
+          <tr>
+            <td>3. Repository mapping</td>
+            <td>Payload <code>repository.full_name</code> must match a registered site</td>
+            <td>Deploys to non-existent or wrong sites</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Verification flow (agent-side)</h3>
+      <pre><code>// docs-hub-agent: webhook verification
+function verifySignature(payload: string, signature: string): boolean {
+  if (!signature || !WEBHOOK_SECRET) return false;
+
+  const computed = crypto
+    .createHmac('sha256', WEBHOOK_SECRET)
+    .update(payload)
+    .digest('hex');
+
+  const expected = `sha256=${computed}`;
+  return crypto.timingSafeEqual(
+    Buffer.from(signature),
+    Buffer.from(expected)
+  );
+}</code></pre>
+
+      <h2>Managing Sites via Server Manager</h2>
+
+      <p>All site management happens through the Server Manager UI or API:</p>
+
+      <table>
+        <thead>
+          <tr><th>Action</th><th>API Endpoint</th><th>UI Path</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Create site</td><td><code>POST /api/docs-hub/sites</code></td><td>Docs Hub → Create New Site</td></tr>
+          <tr><td>List sites</td><td><code>GET /api/docs-hub/sites</code></td><td>Docs Hub main page</td></tr>
+          <tr><td>Get site details</td><td><code>GET /api/docs-hub/sites/:id</code></td><td>Click site card</td></tr>
+          <tr><td>Update site</td><td><code>PATCH /api/docs-hub/sites/:id</code></td><td>Edit site modal</td></tr>
+          <tr><td>Redeploy</td><td><code>POST /api/docs-hub/sites/:id/deploy</code></td><td>Click "Deploy" on site card</td></tr>
+          <tr><td>Delete site</td><td><code>DELETE /api/docs-hub/sites/:id</code></td><td>Click delete (trash icon)</td></tr>
+          <tr><td>View deploy logs</td><td><code>GET /api/docs-hub/sites/:id/logs</code></td><td>Site detail expand</td></tr>
+        </tbody>
+      </table>
+
+      <h2>DNS and Domain Setup</h2>
+
+      <p>When you create a new docs site, the system automatically:</p>
+      <ol>
+        <li>Creates a Cloudflare DNS A record: <code>{site-name}.docs.enfonoerp.com → 161.97.183.143</code></li>
+        <li>Registers a Caddy route in <code>/opt/docs-hub/Caddyfile.sites</code></li>
+        <li>Sets up the Git repo on the docs server</li>
+        <li>Performs the initial deploy (git clone + Caddy reload)</li>
+      </ol>
+
+      <p>The wildcard SSL certificate (<code>*.docs.enfonoerp.com</code>) covers all subdomains — no per-site cert setup needed.</p>
+
+      <div class="callout callout-info">
+        <strong>DNS propagation:</strong> New DNS records can take 1-5 minutes to propagate. If your site returns an NXDOMAIN error right after creation, wait a minute and try again.
+      </div>
+
+      <h2>Troubleshooting</h2>
+
+      <h3>Site not updating after push</h3>
+      <ol>
+        <li>Check GitHub webhook "Recent Deliveries" — does it show HTTP 200?</li>
+        <li>If HTTP 500: check docs-hub-agent logs: <code>ssh docs-server 'journalctl -u docs-hub-agent -n 50'</code></li>
+        <li>If HTTP 401: webhook secret mismatch. Verify <code>WEBHOOK_SECRET</code> on server matches GitHub.</li>
+        <li>If HTTP 200 but no update: the agent may have failed to match <code>repository.full_name</code>. Check the site's gitRepo in Server Manager matches exactly.</li>
+      </ol>
+
+      <h3>DNS not resolving</h3>
+      <pre><code>dig {site-name}.docs.enfonoerp.com +short</code></pre>
+      <p>Should return <code>161.97.183.143</code>. If not, check Cloudflare DNS records in the dashboard.</p>
+
+      <h3>SSL certificate error</h3>
+      <p>The wildcard cert uses Cloudflare DNS-01 challenge. If Caddy fails to obtain/renew:</p>
+      <pre><code># On docs server:
+ssh docs-server
+systemctl status caddy
+journalctl -u caddy -n 50 | grep -i "acme\|tls\|cert"</code></pre>
+
+      <div class="callout callout-tip">
+        <strong>Pro tip:</strong> Use the "Webhook Guide" button on any site card in Server Manager for a copy-pasteable setup walkthrough including the exact webhook URL and secret.
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/nav.js"></script>
+</body>
+</html>

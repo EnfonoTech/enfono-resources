@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enfono Internal Resources</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="layout">
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <h2>🔧 Enfono Resources</h2>
+      </div>
+      <div class="sidebar-search">
+        <input type="text" id="nav-search" placeholder="Search pages...">
+      </div>
+      <ul class="nav-list" id="nav-list">
+        <li><a href="/" class="nav-link active">Home</a></li>
+        <li><a href="pages/docs-hub-webhooks.html" class="nav-link">Docs Hub &amp; Webhooks</a></li>
+        <li><a href="pages/brain-mcp.html" class="nav-link">Brain MCP</a></li>
+        <li><a href="pages/deepclaude-mixed.html" class="nav-link">DeepClaude Mixed</a></li>
+        <li><a href="pages/documentation-workflow.html" class="nav-link">Documentation Workflow</a></li>
+      </ul>
+    </nav>
+
+    <main class="content">
+      <h1>Enfono Technologies — Internal Resources</h1>
+      <p>
+        Central documentation for Enfono's internal tools, infrastructure, and development workflows.
+        Covers Docs Hub auto-deploy, Brain MCP for Frappe corpus search, DeepClaude Mixed proxy setup, and the documentation lifecycle from Frappe app to live site.
+      </p>
+
+      <h2>What's covered</h2>
+
+      <table>
+        <thead>
+          <tr><th>Guide</th><th>What you'll learn</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a href="pages/docs-hub-webhooks.html">Docs Hub &amp; Webhooks</a></td>
+            <td>How auto-deploy works, setting up GitHub webhooks, HMAC verification, DNS, Caddy routing</td>
+          </tr>
+          <tr>
+            <td><a href="pages/brain-mcp.html">Brain MCP</a></td>
+            <td>Connecting Claude Code to the Frappe corpus search, available tools, search syntax, multi-client configs</td>
+          </tr>
+          <tr>
+            <td><a href="pages/deepclaude-mixed.html">DeepClaude Mixed</a></td>
+            <td>Local proxy for mixing DeepSeek + Claude models, installation, mode switching, troubleshooting</td>
+          </tr>
+          <tr>
+            <td><a href="pages/documentation-workflow.html">Documentation Workflow</a></td>
+            <td>End-to-end: auto-generating docs from a Frappe app, publishing to GitHub, deploying via Docs Hub</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Quick Reference</h2>
+
+      <div class="callout callout-info">
+        <strong>Server Manager:</strong> <a href="https://manager.enfonoerp.com" target="_blank">manager.enfonoerp.com</a><br>
+        <strong>Docs Hub domain:</strong> <code>*.docs.enfonoerp.com</code><br>
+        <strong>GitHub org:</strong> <a href="https://github.com/EnfonoTech" target="_blank">github.com/EnfonoTech</a><br>
+        <strong>Brain MCP endpoint:</strong> <code>https://brain.enfonoerp.com/mcp</code>
+      </div>
+
+      <div class="callout callout-tip">
+        <strong>Tip:</strong> Every docs site auto-deploys on push. Edit any page, commit, push — changes go live within 30 seconds. No manual steps needed.
+      </div>
+    </main>
+  </div>
+
+  <script src="js/nav.js"></script>
+</body>
+</html>

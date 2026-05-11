@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DeepClaude Mixed — Enfono Resources</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div class="layout">
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <h2>🔧 Enfono Resources</h2>
+      </div>
+      <div class="sidebar-search">
+        <input type="text" id="nav-search" placeholder="Search pages...">
+      </div>
+      <ul class="nav-list" id="nav-list">
+        <li><a href="/" class="nav-link">Home</a></li>
+        <li><a href="docs-hub-webhooks.html" class="nav-link">Docs Hub &amp; Webhooks</a></li>
+        <li><a href="brain-mcp.html" class="nav-link">Brain MCP</a></li>
+        <li><a href="deepclaude-mixed.html" class="nav-link active">DeepClaude Mixed</a></li>
+        <li><a href="documentation-workflow.html" class="nav-link">Documentation Workflow</a></li>
+      </ul>
+    </nav>
+
+    <main class="content">
+      <h1>DeepClaude Mixed</h1>
+      <p>
+        DeepClaude Mixed is a local proxy that lets Claude Code use DeepSeek's models for reasoning-heavy tasks
+        while routing to Anthropic's Claude for final responses. It runs as a Node.js process on your machine
+        and intercepts API calls — no changes needed in your Claude Code setup beyond two environment variables.
+      </p>
+
+      <h2>Why use it</h2>
+
+      <ul>
+        <li><strong>Cost savings:</strong> DeepSeek is significantly cheaper than Claude for reasoning tokens</li>
+        <li><strong>Flexible routing:</strong> Choose which model handles thinking vs. final output</li>
+        <li><strong>Transparent:</strong> Claude Code thinks it's talking to Anthropic's API — the proxy handles the split</li>
+        <li><strong>Local:</strong> Runs on your machine, no data leaves your control except to the respective APIs</li>
+      </ul>
+
+      <h2>Architecture</h2>
+
+      <pre><code>Claude Code / VS Code Extension
+  │
+  │  POST http://127.0.0.1:3200/v1/messages
+  │  (thinks it's talking to Anthropic API)
+  ▼
+DeepClaude Mixed Proxy (localhost:3200)
+  │
+  ├─ Thinking phase → DeepSeek API (api.deepseek.com)
+  │   Uses DEEPSEEK_API_KEY
+  │
+  ├─ Strips thinking from DeepSeek response
+  │
+  └─ Final response phase → Anthropic API (api.anthropic.com)
+      Uses ANTHROPIC_API_KEY (or ANTHROPIC_BASE_URL)
+  │
+  ▼
+Response returned to Claude Code (combined)</code></pre>
+
+      <h2>Installation</h2>
+
+      <h3>macOS</h3>
+      <ol class="steps">
+        <li>
+          <h3>Clone the repository</h3>
+          <pre><code>git clone https://github.com/EnfonoTech/deepclaude-mixed.git
+cd deepclaude-mixed</code></pre>
+        </li>
+        <li>
+          <h3>Install dependencies</h3>
+          <pre><code>npm install</code></pre>
+        </li>
+        <li>
+          <h3>Set up API keys</h3>
+          <p>Add to your shell profile (<code>~/.zshrc</code> or <code>~/.bashrc</code>):</p>
+          <pre><code>export DEEPSEEK_API_KEY="sk-your-deepseek-key"
+export ANTHROPIC_API_KEY="sk-ant-your-anthropic-key"</code></pre>
+          <p>Then reload: <code>source ~/.zshrc</code></p>
+        </li>
+        <li>
+          <h3>Start the proxy</h3>
+          <pre><code>npm start</code></pre>
+          <p>The proxy starts on <code>http://127.0.0.1:3200</code>.</p>
+        </li>
+      </ol>
+
+      <h3>Ubuntu / Linux</h3>
+      <ol class="steps">
+        <li>
+          <h3>Install Node.js 20+</h3>
+          <pre><code>curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt-get install -y nodejs</code></pre>
+        </li>
+        <li>
+          <h3>Clone and install</h3>
+          <pre><code>git clone https://github.com/EnfonoTech/deepclaude-mixed.git
+cd deepclaude-mixed
+npm install</code></pre>
+        </li>
+        <li>
+          <h3>Set API keys in terminal</h3>
+          <pre><code>export DEEPSEEK_API_KEY="sk-your-deepseek-key"
+export ANTHROPIC_API_KEY="sk-ant-your-anthropic-key"</code></pre>
+          <p>For permanent setup, add to <code>~/.bashrc</code>.</p>
+        </li>
+        <li>
+          <h3>Start the proxy</h3>
+          <pre><code>npm start</code></pre>
+        </li>
+      </ol>
+
+      <h3>Windows</h3>
+      <ol class="steps">
+        <li>Install Node.js 20+ from <a href="https://nodejs.org" target="_blank">nodejs.org</a></li>
+        <li>Clone the repo: <code>git clone https://github.com/EnfonoTech/deepclaude-mixed.git</code></li>
+        <li><code>cd deepclaude-mixed && npm install</code></li>
+        <li>Set environment variables in System Properties → Environment Variables</li>
+        <li><code>npm start</code></li>
+      </ol>
+
+      <div class="callout callout-info">
+        <strong>Auto-start:</strong> Use the install script for automatic startup on boot:
+        <pre><code>node bin/deepclaude-mixed-setup</code></pre>
+        This creates a systemd service (Linux), launchd plist (macOS), or scheduled task (Windows).
+      </div>
+
+      <h2>Configuring Claude Code</h2>
+
+      <p>Once the proxy is running on port 3200, tell Claude Code to use it:</p>
+
+      <h3>Option A: Environment variables (recommended)</h3>
+      <pre><code>export ANTHROPIC_BASE_URL="http://127.0.0.1:3200"
+export ANTHROPIC_API_KEY="unused"</code></pre>
+
+      <h3>Option B: Claude Code config</h3>
+      <p>In <code>~/.claude/claude.json</code> or VS Code settings:</p>
+      <pre><code>{
+  "api": {
+    "baseUrl": "http://127.0.0.1:3200",
+    "apiKey": "unused"
+  }
+}</code></pre>
+
+      <div class="callout callout-warning">
+        <strong>Important:</strong> <code>ANTHROPIC_API_KEY</code> must be set to any non-empty value (e.g. <code>"unused"</code>) when using the proxy. Claude Code requires it even though the actual API key is configured in the proxy's own <code>ANTHROPIC_API_KEY</code> env var.
+      </div>
+
+      <h2>Modes</h2>
+
+      <p>DeepClaude Mixed supports different routing modes:</p>
+
+      <table>
+        <thead>
+          <tr><th>Mode</th><th>Thinking Model</th><th>Response Model</th><th>Best for</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>mixed</code></td><td>DeepSeek R1</td><td>Claude Sonnet</td><td>Complex reasoning tasks (default)</td></tr>
+          <tr><td><code>deepseek-only</code></td><td>DeepSeek R1</td><td>DeepSeek R1</td><td>Budget-sensitive, non-critical tasks</td></tr>
+          <tr><td><code>claude-only</code></td><td>—</td><td>Claude Sonnet</td><td>Bypass proxy, use Claude directly</td></tr>
+        </tbody>
+      </table>
+
+      <p>Switch modes via the CLI:</p>
+      <pre><code># Check current mode
+node bin/claude-mode
+
+# Switch mode
+node bin/claude-mode deepseek-only
+node bin/claude-mode claude-only
+node bin/claude-mode mixed</code></pre>
+
+      <h2>Port already in use</h2>
+
+      <p>If you see <code>Error: listen EADDRINUSE: address already in use 127.0.0.1:3200</code>:</p>
+
+      <pre><code># Find what's using port 3200
+lsof -i :3200           # macOS/Linux
+netstat -ano | findstr :3200  # Windows
+
+# Kill the process
+kill -9 &lt;PID&gt;            # macOS/Linux
+taskkill /PID &lt;PID&gt; /F   # Windows</code></pre>
+
+      <p>If the old process is a zombie (shows as <code>(node)</code> with no PID):</p>
+      <pre><code># Force kill all node processes on port 3200
+fuser -k 3200/tcp       # Linux
+lsof -ti :3200 | xargs kill -9  # macOS</code></pre>
+
+      <h2>Uninstalling</h2>
+      <pre><code># Stop auto-start service
+node bin/deepclaude-mixed-uninstall
+
+# Remove the directory
+rm -rf ~/deepclaude-mixed
+
+# Remove env vars from ~/.zshrc or ~/.bashrc</code></pre>
+
+      <h2>Troubleshooting</h2>
+
+      <h3>Claude Code says "Connection refused"</h3>
+      <p>The proxy isn't running. Start it: <code>cd ~/deepclaude-mixed && npm start</code></p>
+
+      <h3>DeepSeek API errors</h3>
+      <p>Check your <code>DEEPSEEK_API_KEY</code> is valid and has credits. Test directly:</p>
+      <pre><code>curl https://api.deepseek.com/v1/models \
+  -H "Authorization: Bearer $DEEPSEEK_API_KEY"</code></pre>
+
+      <h3>Anthropic API errors</h3>
+      <p>The proxy uses its own <code>ANTHROPIC_API_KEY</code> env var. Verify it's set in the terminal where you started the proxy.</p>
+
+      <h3>VS Code: "Claude Code extension asking what's next"</h3>
+      <p>This happens when the extension can't reach the API. Make sure:</p>
+      <ol>
+        <li>The proxy is running (<code>npm start</code> in the deepclaude-mixed directory)</li>
+        <li>VS Code's Claude Code settings point to <code>http://127.0.0.1:3200</code></li>
+        <li>In VS Code, go to Claude Code extension settings → "Advanced: Base URL" → <code>http://127.0.0.1:3200</code></li>
+      </ol>
+
+      <div class="callout callout-tip">
+        <strong>Pro tip:</strong> Run the proxy in a dedicated terminal window so you can see request logs. The proxy logs every request with model routing info — useful for debugging.
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/nav.js"></script>
+</body>
+</html>
