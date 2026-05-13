@@ -88,8 +88,26 @@
           <tr><td><code>Frappe Brain: Disable</code></td><td>Disable without removing config</td></tr>
           <tr><td><code>Frappe Brain: Toggle</code></td><td>Flip enable/disable</td></tr>
           <tr><td><code>Frappe Brain: Show Status</code></td><td>Config check + connectivity test</td></tr>
+          <tr><td><code>Toggle 1p/3p Mode</code></td><td>Switch between Anthropic direct (1p) and DeepSeek proxy (3p)</td></tr>
         </tbody>
       </table>
+
+      <h4>1p/3p Mode Switching</h4>
+      <p>The extension supports toggling between two routing modes:</p>
+
+      <table>
+        <thead>
+          <tr><th>Mode</th><th>Status Bar</th><th>Routing</th><th>When to use</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>3p</strong> (default)</td><td><code>✓ DeepClaude :3200 3p</code></td><td>Claude Code → local proxy → DeepSeek</td><td>Daily work, cost savings on reasoning</td></tr>
+          <tr><td><strong>1p</strong></td><td><code>⊘ DeepClaude 1p</code></td><td>Claude Code → Anthropic direct (OAuth/key)</td><td>Debugging, when DeepSeek is down, extended thinking with real Opus</td></tr>
+        </tbody>
+      </table>
+
+      <p><code>Ctrl+Shift+P</code> → <strong>Toggle 1p/3p Mode</strong>. Status bar updates instantly. Reload VS Code window for Claude Code to pick up the change (extension prompts you).</p>
+
+      <p>Mode persists across restarts. Default is 3p.</p>
 
       <h4>Extension settings</h4>
       <table>
