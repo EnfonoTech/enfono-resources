@@ -39,7 +39,7 @@
 POST https://docs.enfonoerp.com/webhook  (HMAC-SHA256 verified)
   │
   ▼
-docs-hub-agent  (port 3849 on docs server 161.97.183.143)
+docs-hub-agent  (port 3849 on docs server)
   │
   ├─ git pull (on matching repo in /opt/docs-hub/sites/)
   └─ caddy reload  (picks up new static files)
@@ -49,7 +49,7 @@ Live at: https://{site-name}.docs.enfonoerp.com</code></pre>
 
       <h2>Key Components</h2>
 
-      <h3>1. Docs Server (161.97.183.143)</h3>
+      <h3>1. Docs Server</h3>
       <ul>
         <li><strong>Caddy:</strong> Reverse proxy + automatic HTTPS via Cloudflare DNS-01 challenge</li>
         <li><strong>docs-hub-agent:</strong> Hono server on port 3849 — handles deploy, delete, and webhook endpoints</li>
@@ -200,7 +200,7 @@ function verifySignature(payload: string, signature: string): boolean {
 
       <p>When you create a new docs site, the system automatically:</p>
       <ol>
-        <li>Creates a Cloudflare DNS A record: <code>{site-name}.docs.enfonoerp.com → 161.97.183.143</code></li>
+        <li>Creates a Cloudflare DNS A record pointing <code>{site-name}.docs.enfonoerp.com</code> to the docs server</li>
         <li>Registers a Caddy route in <code>/opt/docs-hub/Caddyfile.sites</code></li>
         <li>Sets up the Git repo on the docs server</li>
         <li>Performs the initial deploy (git clone + Caddy reload)</li>
@@ -224,7 +224,7 @@ function verifySignature(payload: string, signature: string): boolean {
 
       <h3>DNS not resolving</h3>
       <pre><code>dig {site-name}.docs.enfonoerp.com +short</code></pre>
-      <p>Should return <code>161.97.183.143</code>. If not, check Cloudflare DNS records in the dashboard.</p>
+      <p>Should return the docs server IP. If not, check Cloudflare DNS records in the dashboard.</p>
 
       <h3>SSL certificate error</h3>
       <p>The wildcard cert uses Cloudflare DNS-01 challenge. If Caddy fails to obtain/renew:</p>
