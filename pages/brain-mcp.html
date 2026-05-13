@@ -68,26 +68,67 @@
 
       <h2>Connecting Claude Code to Brain</h2>
 
-      <h3>Prerequisites</h3>
-      <ul>
-        <li>Claude Code installed (VS Code extension or CLI)</li>
-        <li>mTLS certificate from the admin: <code>~/.config/frappe-brain/sayanth@enfono.com.p12</code></li>
-        <li>Brain MCP endpoint accessible: <code>https://brain.enfonoerp.com/mcp</code></li>
-      </ul>
+      <p>Two methods. <strong>Method A is recommended</strong> for most users.</p>
 
-      <h3>Configuration</h3>
-      <p>Add this to your Claude Code config (<code>~/.claude/claude.json</code> or VS Code settings):</p>
-
+      <h3>Method A — VS Code Extension (Recommended)</h3>
+      <ol class="steps">
+        <li>Install the <strong>DeepClaude Mixed</strong> VS Code extension (<code>ENfono.deepclaude-mixed</code>)</li>
+        <li>Get an API key from your admin</li>
+        <li><code>Ctrl+Shift+P</code> → <strong>Frappe Brain: Configure</strong> → paste key</li>
+        <li>Restart Claude Code (or reload VS Code)</li>
+        <li>Brain tools appear — no certs, no manual config editing</li>
+      </ol>
+      <p>The extension writes this config to <code>~/.claude.json</code> automatically:</p>
       <pre><code>{
   "mcpServers": {
     "frappe-brain": {
-      "type": "url",
-      "url": "https://brain.enfonoerp.com/mcp"
+      "url": "https://brain.enfonoerp.com/mcp",
+      "transport": "streamableHttp",
+      "headers": { "x-api-key": "sk-brain-..." }
     }
   }
 }</code></pre>
+      <p>API key stored in OS keychain via VS Code SecretStorage — never in plaintext.</p>
 
-      <p>The mTLS certificate is configured separately. Contact the admin for your personal <code>.p12</code> file.</p>
+      <h4>Managing Brain via extension</h4>
+      <table>
+        <thead><tr><th>Command</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td><code>Frappe Brain: Configure</code></td><td>Set/replace API key → auto-enables</td></tr>
+          <tr><td><code>Frappe Brain: Enable</code></td><td>Write MCP config (must have key set first)</td></tr>
+          <tr><td><code>Frappe Brain: Disable</code></td><td>Set <code>disabled: true</code> — stops without removing config</td></tr>
+          <tr><td><code>Frappe Brain: Toggle</code></td><td>Flip enable/disable</td></tr>
+          <tr><td><code>Frappe Brain: Show Status</code></td><td>Config check + connectivity test to brain server</td></tr>
+        </tbody>
+      </table>
+
+      <hr>
+
+      <h3>Method B — Manual mTLS (Advanced)</h3>
+      <p>For terminal-only users or when the extension isn't available.</p>
+
+      <h4>Prerequisites</h4>
+      <ul>
+        <li>Claude Code CLI installed</li>
+        <li>mTLS certificate from the admin: <code>~/.config/frappe-brain/yourname@enfono.com.p12</code></li>
+        <li>Brain MCP endpoint accessible: <code>https://brain.enfonoerp.com/mcp</code></li>
+      </ul>
+
+      <h4>Configuration</h4>
+      <p>Add to <code>~/.claude.json</code>:</p>
+      <pre><code>{
+  "mcpServers": {
+    "frappe-brain": {
+      "url": "https://brain.enfonoerp.com/mcp",
+      "transport": "streamableHttp"
+    }
+  }
+}</code></pre>
+      <p>The mTLS certificate is configured in your Claude Code environment. Contact the admin for your personal <code>.p12</code> file.</p>
+
+      <div class="callout callout-info">
+        <strong>Which method?</strong> Use Method A (extension) if you use VS Code or Cursor. Use Method B (mTLS) for headless/terminal-only setups. Both give the same 8 tools.
+      </div>
 
       <div class="callout callout-warning">
         <strong>Network required:</strong> Brain MCP runs on Enfono's VPS. You must have network access (VPN or office network) to reach <code>brain.enfonoerp.com</code>.
