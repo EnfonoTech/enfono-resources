@@ -70,15 +70,23 @@
 
       <p>Two methods. <strong>Method A is recommended</strong> for most users.</p>
 
-      <h3>Method A — VS Code Extension (Recommended)</h3>
+      <h3>Method A — Frappe Brain VS Code Extension (Recommended)</h3>
+
+      <h4>Install</h4>
+      <p>Get the <code>.vsix</code> file from your admin, then install via terminal:</p>
+      <pre><code>code --install-extension frappe-brain-0.1.0.vsix</code></pre>
+      <p>Or via VS Code UI: Extensions panel → <code>...</code> → <strong>Install from VSIX...</strong> → select the file.</p>
+
+      <h4>First-time setup</h4>
       <ol class="steps">
-        <li>Install the <strong>DeepClaude Mixed</strong> VS Code extension (<code>ENfono.deepclaude-mixed</code>)</li>
-        <li>Get an API key from your admin</li>
-        <li><code>Ctrl+Shift+P</code> → <strong>Frappe Brain: Configure</strong> → paste key</li>
-        <li>Restart Claude Code (or reload VS Code)</li>
-        <li>Brain tools appear — no certs, no manual config editing</li>
+        <li>Get an API key from your admin (Sayanth)</li>
+        <li><code>Ctrl+Shift+P</code> → <strong>Frappe Brain: Configure API Key</strong> → paste key</li>
+        <li><code>Ctrl+Shift+P</code> → <strong>Frappe Brain: Enable</strong></li>
+        <li>Status bar at bottom-right shows: <code>Brain ON</code></li>
+        <li>Restart Claude Code — Brain tools now available</li>
       </ol>
-      <p>The extension writes this config to <code>~/.claude.json</code> automatically:</p>
+
+      <p>The extension writes this to <code>~/.claude.json</code> automatically:</p>
       <pre><code>{
   "mcpServers": {
     "frappe-brain": {
@@ -88,17 +96,27 @@
     }
   }
 }</code></pre>
-      <p>API key stored in OS keychain via VS Code SecretStorage — never in plaintext.</p>
+      <p>API key stored in OS keychain via VS Code SecretStorage — never in plaintext files.</p>
 
-      <h4>Managing Brain via extension</h4>
+      <h4>Status bar</h4>
+      <p>Bottom-right of VS Code shows Brain state. Click to toggle.</p>
+      <table>
+        <thead><tr><th>Status bar</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td><code>Brain ON</code></td><td>MCP config active — tools available in Claude Code</td></tr>
+          <tr><td><code>Brain OFF</code></td><td>Disabled — tools not available</td></tr>
+        </tbody>
+      </table>
+
+      <h4>Commands</h4>
       <table>
         <thead><tr><th>Command</th><th>Action</th></tr></thead>
         <tbody>
-          <tr><td><code>Frappe Brain: Configure</code></td><td>Set/replace API key → auto-enables</td></tr>
-          <tr><td><code>Frappe Brain: Enable</code></td><td>Write MCP config (must have key set first)</td></tr>
-          <tr><td><code>Frappe Brain: Disable</code></td><td>Set <code>disabled: true</code> — stops without removing config</td></tr>
-          <tr><td><code>Frappe Brain: Toggle</code></td><td>Flip enable/disable</td></tr>
-          <tr><td><code>Frappe Brain: Show Status</code></td><td>Config check + connectivity test to brain server</td></tr>
+          <tr><td><code>Frappe Brain: Configure API Key</code></td><td>Set or replace API key</td></tr>
+          <tr><td><code>Frappe Brain: Enable</code></td><td>Write MCP config and activate</td></tr>
+          <tr><td><code>Frappe Brain: Disable</code></td><td>Deactivate without removing config</td></tr>
+          <tr><td><code>Frappe Brain: Toggle</code></td><td>Flip enable/disable (also via status bar click)</td></tr>
+          <tr><td><code>Frappe Brain: Show Status</code></td><td>Config check + live connectivity test</td></tr>
         </tbody>
       </table>
 
@@ -230,11 +248,19 @@ client: "ksa-retail"</code></pre>
 
       <h2>Troubleshooting</h2>
 
+      <h3>VSIX install fails with "EISDIR" or "not found"</h3>
+      <ul>
+        <li><code>EISDIR</code> — you have a directory named <code>frappe-brain-0.1.0.vsix</code> instead of the file. Delete it and copy the real <code>.vsix</code> file.</li>
+        <li>Trailing slash — run <code>code --install-extension /path/to/frappe-brain-0.1.0.vsix</code> without trailing <code>/</code></li>
+        <li>WSL users — run the command in WSL terminal, not PowerShell. Or use VS Code UI (Install from VSIX) from Windows side.</li>
+      </ul>
+
       <h3>Brain tools not showing up in Claude Code</h3>
       <ol>
-        <li>Verify the MCP server is in your Claude Code config</li>
-        <li>Restart Claude Code after adding the config</li>
-        <li>Check network: <code>curl https://brain.enfonoerp.com/mcp</code> should return a JSON error (not timeout)</li>
+        <li>Check status bar shows <code>Brain ON</code> — if OFF, run <code>Frappe Brain: Enable</code></li>
+        <li>Restart Claude Code after enabling (<code>Ctrl+Shift+P</code> → <strong>Claude Code: Restart</strong>)</li>
+        <li>Verify MCP config: <code>cat ~/.claude.json</code> — should contain <code>frappe-brain</code> entry without <code>"disabled": true</code></li>
+        <li>Check connectivity: <code>Frappe Brain: Show Status</code> — shows live ping result</li>
       </ol>
 
       <h3>Certificate errors</h3>
