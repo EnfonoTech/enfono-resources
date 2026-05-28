@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Server Manager — Site Creation Do &amp; Don't — Enfono Resources</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div class="layout">
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <h2>🔧 Enfono Resources</h2>
+      </div>
+      <div class="sidebar-search">
+        <input type="text" id="nav-search" placeholder="Search pages...">
+      </div>
+      <ul class="nav-list" id="nav-list">
+        <li><a href="/" class="nav-link">Home</a></li>
+        <li><a href="docs-hub-webhooks.html" class="nav-link">Docs Hub &amp; Webhooks</a></li>
+        <li><a href="brain-mcp.html" class="nav-link">Brain MCP</a></li>
+        <li><a href="deepclaude-mixed.html" class="nav-link">DeepClaude Mixed</a></li>
+        <li><a href="documentation-workflow.html" class="nav-link">Documentation Workflow</a></li>
+        <li><a href="server-manager-site-creation.html" class="nav-link active">Site Creation Guide</a></li>
+      </ul>
+    </nav>
+
+    <main class="content">
+      <h1>Server Manager — Site Creation Do &amp; Don't</h1>
+      <p>
+        When the manager shows an error during site creation, developers sometimes open a terminal and create the site
+        manually via bench. This guide explains what is safe and what will break production.
+      </p>
+
+      <div class="callout callout-danger" style="background:#fff0f0;border-left:4px solid #e94560;padding:12px 16px;margin:16px 0;border-radius:4px;">
+        <strong>One Rule:</strong> <code>bench setup nginx</code> is a nuclear option. Never run it on a managed server.
+        Manager's nginx config has hand-crafted SSL blocks that bench doesn't know about. One command undoes hours of work.
+      </div>
+
+      <h2>✅ Safe to do in terminal</h2>
+
+      <h3>1. Create the site</h3>
+      <pre><code>su - v15 -c "cd frappe-bench && bench new-site sitename.enfonoerp.com \
+  --admin-password admin \
+  --mariadb-root-password &lt;rootpass&gt; \
+  --install-app erpnext"</code></pre>
+      <p>Replace <code>v15</code> with the bench user for that server (e.g. <code>frappe</code>, <code>hatco</code>). Never run bench commands as root.</p>
+
+      <h3>2. Install additional apps</h3>
+      <pre><code>su - v15 -c "cd frappe-bench && bench --site sitename.enfonoerp.com install-app hrms"</code></pre>
+
+      <h3>3. Migrate</h3>
+      <pre><code>su - v15 -c "cd frappe-bench && bench --site sitename.enfonoerp.com migrate"</code></pre>
+
+      <h3>4. Register site in manager (required)</h3>
+      <p>After creating the site in bench, register it so the manager can track it and handle nginx/SSL:</p>
+      <pre><code>SECRET=$(grep AGENT_SECRET /opt/server-manager-agent/.env | cut -d= -f2)
+
+curl -s -X POST http://localhost:3847/api/sites \
+  -H "Authorization: Bearer $SECRET" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "serverId": "&lt;SERVER_ID&gt;",
+    "siteName": "sitename.enfonoerp.com",
+    "benchPath": "/home/v15/frappe-bench"
+  }'</code></pre>
+      <p>Then use the <strong>Manager UI → server → site → Set Domain + SSL</strong> to configure nginx and issue the cert.</p>
+
+      <h2>❌ Never do this</h2>
+
+      <table>
+        <thead>
+          <tr><th>Command</th><th>Why it breaks things</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>bench setup nginx</code></td>
+            <td>Rewrites entire <code>/etc/nginx/conf.d/frappe-bench.conf</code> from bench's template — wipes all SSL blocks, shared certs, custom server blocks set up by the manager</td>
+          </tr>
+          <tr>
+            <td><code>bench setup production</code></td>
+            <td>Calls <code>bench setup nginx</code> internally — same destruction, harder to notice</td>
+          </tr>
+          <tr>
+            <td><code>certbot --nginx -d newsite.com</code></td>
+            <td>May merge new domain into an existing shared cert (changing its path) or issue a replacement cert — breaks SSL for every other site sharing that cert</td>
+          </tr>
+          <tr>
+            <td><code>certbot run</code> or <code>certbot renew</code> without <code>--cert-name</code></td>
+            <td>Renews all certs, can restructure shared cert domains unexpectedly</td>
+          </tr>
+          <tr>
+            <td>Running any bench/certbot command as <code>root</code></td>
+            <td>Creates root-owned log files under <code>sites/</code> — Frappe worker can't write logs → login fails with PermissionError</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>When manager shows an error</h2>
+
+      <ol class="steps">
+        <li>
+          <h3>Check job logs first</h3>
+          <p>Manager UI → <strong>Jobs</strong> → click the failed job → see the exact error step. Most errors are fixable without touching the terminal.</p>
+        </li>
+        <li>
+          <h3>Common fixable errors</h3>
+          <table>
+            <thead><tr><th>Error</th><th>Fix</th></tr></thead>
+            <tbody>
+              <tr><td>MariaDB root password wrong</td><td>Update password in server settings, retry job</td></tr>
+              <tr><td>App not in bench</td><td><code>su - v15 -c "bench get-app &lt;app&gt;"</code> then retry via manager</td></tr>
+              <tr><td>Disk full</td><td>Clear space, retry</td></tr>
+              <tr><td>DNS not propagated</td><td>Wait for DNS, then retry SSL step only</td></tr>
+            </tbody>
+          </table>
+        </li>
+        <li>
+          <h3>If manager is truly broken and site must go live NOW</h3>
+          <p>Use the safe terminal steps above (bench new-site + install apps). <strong>Stop there.</strong> Do not touch nginx or certbot. The site will work internally.</p>
+          <p>Register the site in manager API, then use manager UI to add domain + SSL once the urgent issue is resolved.</p>
+        </li>
+      </ol>
+
+      <h2>Server bench users reference</h2>
+      <table>
+        <thead><tr><th>Server</th><th>Bench user</th><th>Bench path</th></tr></thead>
+        <tbody>
+          <tr><td>EFTSP-001, 002, 003, 004, 005, 006, 007, 008, 009, 011, 013, 014, 015</td><td><code>v15</code></td><td><code>/home/v15/frappe-bench</code></td></tr>
+          <tr><td>EFTSP-010 (HATCO)</td><td><code>hatco</code></td><td><code>/home/hatco/frappe-bench</code></td></tr>
+          <tr><td>EFTSP-012 (NANOPRESS)</td><td><code>frappe</code></td><td><code>/home/frappe/frappe-bench</code></td></tr>
+          <tr><td>EFTSD-001 (GS DEV)</td><td><code>v15</code></td><td><code>/home/v15/frappe-bench</code></td></tr>
+          <tr><td>EFTSD-002</td><td><code>v15</code></td><td><code>/home/v15/frappe-bench</code></td></tr>
+          <tr><td>EFTCS-001 (Tabiah)</td><td><code>v15</code></td><td><code>/home/v15/frappe-bench</code></td></tr>
+        </tbody>
+      </table>
+
+    </main>
+  </div>
+  <script src="../js/nav.js"></script>
+</body>
+</html>
