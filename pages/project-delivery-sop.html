@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Delivery SOP (SOP-ERP-002 v2.0) — Enfono Resources</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .track { display:inline-block; font-size:11px; font-weight:700; letter-spacing:.4px; padding:2px 9px; border-radius:20px; text-transform:uppercase; color:#fff; }
+    .track.std { background:#10b981; } .track.cus { background:#f59e0b; }
+    .flow { display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin:14px 0; }
+    .flow .node { background:#1a1a2e; color:#fff; font-size:13px; font-weight:600; padding:8px 14px; border-radius:8px; }
+    .flow .node.alt { background:#e94560; }
+    .flow .arr { color:#e94560; font-weight:700; font-size:16px; }
+    .owner { font-size:12px; font-weight:700; color:#e94560; background:#fef2f4; padding:1px 7px; border-radius:5px; }
+    .gate { border-left:4px solid #10b981; background:#ecfdf5; padding:10px 14px; border-radius:0 6px 6px 0; margin:12px 0; font-size:13.5px; }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <h2>🔧 Enfono Resources</h2>
+      </div>
+      <div class="sidebar-search">
+        <input type="text" id="nav-search" placeholder="Search pages...">
+      </div>
+      <ul class="nav-list" id="nav-list">
+        <li><a href="/" class="nav-link">Home</a></li>
+        <li><a href="docs-hub-webhooks.html" class="nav-link">Docs Hub &amp; Webhooks</a></li>
+        <li><a href="brain-mcp.html" class="nav-link">Brain MCP</a></li>
+        <li><a href="deepclaude-mixed.html" class="nav-link">DeepClaude Mixed</a></li>
+        <li><a href="documentation-workflow.html" class="nav-link">Documentation Workflow</a></li>
+        <li><a href="server-manager-site-creation.html" class="nav-link">Site Creation Guide</a></li>
+        <li><a href="project-delivery-sop.html" class="nav-link active">Project Delivery SOP</a></li>
+      </ul>
+    </nav>
+
+    <main class="content">
+      <h1>Project Delivery — Standard Operating Procedure</h1>
+      <p>
+        <strong>SOP-ERP-002 · Version 2.0 · Internal Use Only.</strong>
+        The single operating reference for every Enfono project — from signed contract to go-live to annual maintenance —
+        across both Own and Collaborated delivery models. Owner: Project Manager + Functional Consultant.
+        Reviewed annually or after any major project retrospective.
+      </p>
+
+      <div class="callout callout-info">
+        <strong>Owner tags used throughout:</strong>
+        <span class="owner">PM</span> Project Manager &nbsp;
+        <span class="owner">FC</span> Functional Consultant &nbsp;
+        <span class="owner">TL</span> Technical Lead &nbsp;
+        <span class="owner">SH</span> Sales Head &nbsp;
+        <span class="owner">PM+FC</span> both
+      </div>
+
+      <!-- OBJECTIVE -->
+      <h2>1. Objective</h2>
+      <p>Deliver every Enfono project in a way that is <strong>consistent, on time, on budget, and easy for any team member to follow</strong> — whether Enfono owns the client relationship directly (Own Project) or delivers through a partner (Collaborated Project). This SOP exists to:</p>
+      <ul>
+        <li>Make responsibilities unambiguous at every step — every action carries an owner tag.</li>
+        <li>Protect Enfono and the client from scope creep through written specifications and Change Requests.</li>
+        <li>Keep the client always informed — a weekly report plus a client meeting every three days.</li>
+        <li>Run the delivery team on a predictable rhythm — a daily standup and a weekly project plan.</li>
+        <li>Standardise good delivery — improving efficiency, consistency, customer experience, scalability, and profitability.</li>
+      </ul>
+
+      <!-- LIFECYCLE -->
+      <h2>2. Lifecycle at a Glance</h2>
+      <p>Four stages in sequence. Stage 2 (Implementation) contains five delivery phases, each gated by a client sign-off. Custom development runs as seven stages inside Phases 2–5.</p>
+      <div class="flow">
+        <span class="node">1 · Sales</span><span class="arr">▶</span>
+        <span class="node">2 · Implementation</span><span class="arr">▶</span>
+        <span class="node">3 · Communication &amp; Finance</span><span class="arr">▶</span>
+        <span class="node">4 · Completion &amp; AMC</span>
+      </div>
+      <table>
+        <thead><tr><th>Phase</th><th>Weeks</th><th>Focus</th><th>Track</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Phase 1</strong></td><td>Wk 1–2</td><td>Foundation &amp; System Setup</td><td><span class="track std">Standard</span></td></tr>
+          <tr><td><strong>Phase 2</strong></td><td>Wk 3–4</td><td>Core Module Configuration</td><td><span class="track cus">Standard + Custom</span></td></tr>
+          <tr><td><strong>Phase 3</strong></td><td>Wk 5–6</td><td>Accounts, Finance &amp; Approvals</td><td><span class="track cus">Standard + Custom</span></td></tr>
+          <tr><td><strong>Phase 4</strong></td><td>Wk 7–8</td><td>Reports, Outputs &amp; Print Formats</td><td><span class="track cus">Standard + Custom</span></td></tr>
+          <tr><td><strong>Phase 5</strong></td><td>Wk 9+</td><td>UAT, Data Migration &amp; Go-Live</td><td><span class="track cus">Standard + Custom</span></td></tr>
+        </tbody>
+      </table>
+      <p><strong>Custom development — 7 stages:</strong> Requirement Capture → Feature Specification → Dev Estimate → Build &amp; Unit Test → Staging Review → UAT → Production Deploy.</p>
+
+      <!-- MODELS -->
+      <h2>3. Delivery Models</h2>
+      <p>The two models differ only in who owns client communication and payment.</p>
+      <table>
+        <thead><tr><th>Activity</th><th>Own Project</th><th>Collaborated Project</th></tr></thead>
+        <tbody>
+          <tr><td>Project execution &amp; delivery</td><td>Team Enfono</td><td>Team Enfono</td></tr>
+          <tr><td>Client communication</td><td>Team Enfono</td><td>Collaborating partner</td></tr>
+          <tr><td>Payment &amp; collection</td><td>Team Enfono</td><td>Collaborating partner</td></tr>
+        </tbody>
+      </table>
+      <div class="callout callout-warning">
+        In a Collaborated Project, Enfono performs <strong>all delivery work</strong>; the partner is the channel to the client. The FC keeps the partner informed exactly as they would the client directly — never bypass the partner.
+      </div>
+
+      <!-- ROLES -->
+      <h2>4. Team Roles</h2>
+      <h3>Vendor side (Enfono)</h3>
+      <table>
+        <thead><tr><th>Role</th><th>Core responsibility</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Project Manager (PM)</strong></td><td>Delivery, timeline, budget, scope control, client escalation, all milestone sign-offs. Final authority on scope and schedule.</td></tr>
+          <tr><td><strong>Functional Consultant (FC)</strong></td><td>Process understanding, configuration quality, requirement sessions, training, UAT facilitation, day-to-day client relationship.</td></tr>
+          <tr><td><strong>Technical Lead (TL)</strong></td><td>Custom development, code review, data migration, production deployment.</td></tr>
+          <tr><td><strong>Sales Head (SH)</strong></td><td>Sales handover, co-authors the Implementation BRD with the PM, briefs the team on client context.</td></tr>
+          <tr><td><strong>Developer(s)</strong></td><td>Build custom features against signed specs under TL supervision.</td></tr>
+        </tbody>
+      </table>
+      <h3>Client side</h3>
+      <table>
+        <thead><tr><th>Role</th><th>Core responsibility</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Business POC</strong></td><td>Final scope/UAT sign-off, payment authority, internal escalation point.</td></tr>
+          <tr><td><strong>Functional Champions</strong></td><td>Dept SMEs who validate workflows in UAT — one per module area.</td></tr>
+          <tr><td><strong>Accountant</strong></td><td>Chart of Accounts validation, Opening Trial Balance, finance UAT.</td></tr>
+          <tr><td><strong>IT Contact</strong></td><td>Server access, firewall, credential handover.</td></tr>
+        </tbody>
+      </table>
+      <h3>PM vs FC — division of work</h3>
+      <table>
+        <thead><tr><th>PM handles</th><th>FC handles</th></tr></thead>
+        <tbody>
+          <tr><td>Contract, SOW, billing, timeline, scope control</td><td>Requirements gathering and process mapping</td></tr>
+          <tr><td>Risk register and escalation</td><td>Day-to-day client communication during configuration</td></tr>
+          <tr><td>Change Request approval and logging</td><td>Requirement sessions and feature spec writing</td></tr>
+          <tr><td>Milestone gate sign-offs</td><td>Demos and walkthrough calls with client users</td></tr>
+          <tr><td>Project status reporting to management</td><td>UAT facilitation, training, user-guide authoring</td></tr>
+        </tbody>
+      </table>
+      <div class="callout callout-info">PM and FC sync daily during active phases. The PM has final authority on all scope and schedule decisions.</div>
+
+      <!-- TOOLS -->
+      <h2>5. Required Tools</h2>
+      <table>
+        <thead><tr><th>Tool</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Microsoft Teams</strong></td><td>One project-wise chat group per project — the single home for all communication and meetings.</td></tr>
+          <tr><td><strong>Project tracker</strong></td><td>Tasks per phase + per custom feature; status, owner, due dates.</td></tr>
+          <tr><td><strong>Shared project folder</strong></td><td>Specs / Data Templates / UAT / Deployment Logs.</td></tr>
+          <tr><td><strong>Custom Feature Register</strong></td><td>Tracks every custom feature from spec → build → UAT → deploy.</td></tr>
+          <tr><td><strong>Risk Register</strong></td><td>Live log of risks, impact, owner, mitigation.</td></tr>
+          <tr><td><strong>UAT Issue Log</strong></td><td>Every bug with severity, status, fix date.</td></tr>
+          <tr><td><strong>Enfono data templates</strong></td><td>Standard Excel import templates for master data.</td></tr>
+          <tr><td><strong>ERPNext / Frappe v15</strong></td><td>The delivery platform.</td></tr>
+          <tr><td><strong>Frappe Secrets / vault</strong></td><td>All credentials — never hardcoded.</td></tr>
+          <tr><td><strong>Weekly Project Report</strong></td><td>Standard client-facing status report template.</td></tr>
+        </tbody>
+      </table>
+
+      <!-- WORKFLOW -->
+      <h2>6. Step-by-Step Workflow</h2>
+
+      <h3>Stage 1 — Sales &amp; Handover (Day 0)</h3>
+      <p>Trigger: signed contract received. Sales hands over to PM within 24 hours; PM briefs FC the same day.</p>
+      <ul>
+        <li><span class="owner">SH→PM</span> Hand over signed contract / SOW — scope, value, payment milestones, client contacts (POC, IT, Accountant).</li>
+        <li><span class="owner">PM</span> Confirm delivery model: Own or Collaborated.</li>
+        <li><span class="owner">PM</span> Note any verbal commitments outside the SOW — log as risks; never commit verbally.</li>
+        <li><span class="owner">FC</span> Read the SOW in full; flag ambiguous requirements or gaps before kickoff.</li>
+      </ul>
+
+      <h3>Stage 2 — Implementation</h3>
+      <ol class="steps">
+        <li>
+          <h3>Team Preparation Meeting (within 24 hrs)</h3>
+          <p><span class="owner">PM+SH</span> prepare the Implementation BRD (scope, deliverables, <strong>explicit out-of-scope list</strong>, expectations). <span class="owner">PM</span> creates the Project Charter, sets up the tracker, shared folder, Custom Feature Register, and the <strong>project-wise Teams group</strong>. <span class="owner">FC</span> shares data templates + drafts the kickoff agenda.</p>
+        </li>
+        <li>
+          <h3>Kickoff Meeting with Client (Days 1–3)</h3>
+          <p><span class="owner">PM+FC</span> facilitate: scope walkthrough → <strong>review the out-of-scope list aloud and get acknowledgement</strong> → timeline + data deadlines → custom feature deep-dive (assign a Functional Champion each) → client responsibilities → communication plan. <span class="owner">PM</span> sends minutes within 24 hrs and obtains written POC acknowledgement.</p>
+        </li>
+      </ol>
+
+      <p><strong>The five delivery phases</strong> — each ends with a milestone the client signs off before the next begins.</p>
+
+      <h4>Phase 1 — Foundation &amp; System Setup (Wk 1–2) <span class="track std">Standard</span></h4>
+      <ul>
+        <li><span class="owner">TL</span> Provision server (DNS, SSL, firewall, SSH); install Frappe v15 + ERPNext; set up site + admin.</li>
+        <li><span class="owner">FC</span> Company setup, localised Chart of Accounts + cost centers, users/roles/permissions, warehouses, SMTP tested.</li>
+      </ul>
+      <div class="gate">✓ <strong>Milestone:</strong> all users log in, email works, COA in place. FC demos to POC; PM gets sign-off.</div>
+
+      <h4>Phase 2 — Core Module Configuration (Wk 3–4) <span class="track cus">Standard + Custom</span></h4>
+      <ul>
+        <li><span class="owner">FC</span> Import master data; naming series + standard print formats; core workflows (Sales SO→DN→SI, Purchase PO→GRN→PI, stock); demo to Champions.</li>
+        <li><span class="owner">FC</span> <strong>Custom Stage 1</strong> — Requirement Capture (AS-IS → TO-BE, data, output, edge cases; log in register).</li>
+        <li><span class="owner">FC</span> <strong>Custom Stage 2</strong> — Feature Specification (objective, scope in/out, flow, fields, logic, acceptance criteria, estimate).</li>
+        <li><span class="owner">PM</span> Approve spec against SOW; allow 2 business days for written client approval — <strong>no development before sign-off</strong>.</li>
+        <li><span class="owner">TL</span> <strong>Custom Stage 3</strong> — Dev Estimate (+20% buffer); if &gt;20% over SOW → raise a Change Request.</li>
+      </ul>
+      <div class="gate">✓ <strong>Milestone:</strong> core transaction cycle tested end-to-end; all Phase 2 specs approved in writing.</div>
+
+      <h4>Phase 3 — Accounts, Finance &amp; Approvals (Wk 5–6) <span class="track cus">Standard + Custom</span></h4>
+      <ul>
+        <li><span class="owner">FC</span> Verify GL entries; tax templates (VAT/GST), P&amp;L, Balance Sheet; approval chains.</li>
+        <li><span class="owner">TL</span> Import Opening Trial Balance — <strong>only after client accountant sign-off</strong>.</li>
+        <li><span class="owner">TL</span> <strong>Custom Stage 4</strong> — Build &amp; Unit Test: dedicated app, no hardcoded credentials, no raw SQL, integrations logged + retry + idempotent, unit tests on all paths.</li>
+      </ul>
+      <div class="gate">✓ <strong>Milestone:</strong> accounting live, first JE posted, approval cycle tested, OTB imported. PM + Accountant sign off.</div>
+
+      <h4>Phase 4 — Reports, Outputs &amp; Print Formats (Wk 7–8) <span class="track cus">Standard + Custom</span></h4>
+      <ul>
+        <li><span class="owner">FC</span> Standard reports, branded Customer SOA, dashboards, role-specific user guide; print-format review call.</li>
+        <li><span class="owner">TL</span> <strong>Custom Stage 5</strong> — Staging Review: deploy to staging, bench migrate, performance check at realistic volumes.</li>
+        <li><span class="owner">PM</span> Sign off staging before any custom feature is shown to the client.</li>
+      </ul>
+      <div class="gate">✓ <strong>Milestone:</strong> all reports run, print formats signed off, custom features pass staging review.</div>
+
+      <h4>Phase 5 — UAT, Data Migration &amp; Go-Live (Wk 9+) <span class="track cus">Standard + Custom</span></h4>
+      <ul>
+        <li><span class="owner">TL</span> Final data migration as of cut-off; <span class="owner">PM+FC</span> freeze legacy + communicate the cut-off.</li>
+        <li><span class="owner">FC</span> <strong>Custom Stage 6</strong> — UAT: test script per feature; Champions execute; record Pass/Fail.</li>
+        <li><span class="owner">PM</span> Triage by severity; obtain written sign-off per feature once Critical/Major resolved.</li>
+        <li><span class="owner">FC</span> Training (operations + finance/manager); confirm users work independently.</li>
+        <li><span class="owner">PM</span> <strong>Custom Stage 7</strong> — Production Deploy: DB backup + rollback plan, off-peak, smoke-test, monitor 30 min.</li>
+      </ul>
+      <table>
+        <thead><tr><th>UAT Severity</th><th>Definition</th><th>Fix target</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Critical</strong></td><td>Broken / wrong GL or stock entry</td><td>24 hrs — retest before proceeding</td></tr>
+          <tr><td><strong>Major</strong></td><td>Key criterion fails, no workaround</td><td>48 hrs — retest</td></tr>
+          <tr><td><strong>Minor</strong></td><td>Cosmetic / non-blocking</td><td>Post-go-live or next sprint</td></tr>
+        </tbody>
+      </table>
+      <div class="gate">✓ <strong>Milestone:</strong> production go-live. PM collects the signed Go-Live Acceptance Form from the Business POC.</div>
+
+      <h3>Stage 3 — Communication &amp; Finance (runs throughout)</h3>
+      <ul>
+        <li><span class="owner">PM</span> <strong>Own Project</strong> — PM handles all client communication, invoicing, and collection directly per billing milestones.</li>
+        <li><span class="owner">FC</span> <strong>Collaborated Project</strong> — the partner owns communication + payment; FC keeps the partner updated; the partner chases delayed responses.</li>
+        <li><span class="owner">PM</span> Invoice on milestone sign-off; follow up on overdue payments per contract.</li>
+      </ul>
+
+      <h3>Stage 4 — Completion &amp; AMC</h3>
+      <ul>
+        <li><strong>Hypercare (Wk 10–12):</strong> <span class="owner">FC</span> daily 15-min check-in first live week; <span class="owner">PM+FC</span> respond to Critical issues within 2 business hours; new requests → CR.</li>
+        <li><strong>Project Close:</strong> <span class="owner">PM+FC</span> post-implementation review; <span class="owner">PM</span> archives docs, client signs final delivery acceptance, final invoice; <span class="owner">FC</span> writes the support handover note.</li>
+        <li><strong>AMC:</strong> transitions into an Annual Maintenance Contract for ongoing support.</li>
+      </ul>
+      <div class="callout callout-info">AMC scope, duration, SLAs, and commercials are defined in the maintenance agreement signed at completion. Work outside AMC scope is handled as a separate Change Request.</div>
+
+      <!-- COMMUNICATION -->
+      <h2>7. Communication Process</h2>
+      <div class="callout callout-info">
+        <strong>One home per project:</strong> the PM creates a dedicated Microsoft Teams group per project. All chat and <strong>all meetings are scheduled inside that group</strong>. Standard threads: General · Specs &amp; CRs · UAT Issues · Deployment.
+      </div>
+      <table>
+        <thead><tr><th>Communication</th><th>When</th><th>Owner</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Daily Team Standup</strong> — yesterday / today / blockers; covers <strong>2 projects' status</strong></td><td>Every working day (15 min)</td><td>PM + team</td></tr>
+          <tr><td><strong>Weekly Project Plan</strong> — tasks, owners, deliverables, dates</td><td>Every Monday</td><td>PM + FC</td></tr>
+          <tr><td><strong>PM ↔ FC Sync</strong></td><td>Daily</td><td>PM + FC</td></tr>
+          <tr><td><strong>Client Meeting</strong> — progress, blockers, decisions</td><td><strong>Once every 3 days</strong></td><td>PM + FC</td></tr>
+          <tr><td><strong>Weekly Project Report to Customer</strong></td><td>Every week (Friday)</td><td>PM / FC→Partner</td></tr>
+          <tr><td><strong>UAT Issue Log review</strong></td><td>Daily during UAT</td><td>FC + PM</td></tr>
+          <tr><td><strong>Escalation</strong> — critical blocker / missed deadline / scope dispute</td><td>As needed</td><td>PM → POC</td></tr>
+        </tbody>
+      </table>
+
+      <!-- CHANGE REQUESTS -->
+      <h2>8. Change Requests — the Scope Gate</h2>
+      <div class="flow">
+        <span class="node">1 · Identify</span><span class="arr">▶</span>
+        <span class="node">2 · Log in CR Register</span><span class="arr">▶</span>
+        <span class="node">3 · Assess impact / effort / cost</span><span class="arr">▶</span>
+        <span class="node">4 · Written CR to POC</span><span class="arr">▶</span>
+        <span class="node alt">5 · POC approves in writing</span><span class="arr">▶</span>
+        <span class="node alt">6 · Update plan / invoice</span>
+      </div>
+      <div class="callout callout-warning"><strong>Hard rule:</strong> no work on any Change Request begins until written client approval is received.</div>
+
+      <!-- OUT OF SCOPE -->
+      <h2>9. Defining Out of Scope</h2>
+      <p>Before kickoff, the PM and FC produce a written <strong>Out-of-Scope list</strong> inside the BRD. For every major area, state explicitly what is <strong>NOT</strong> included — e.g. "Payroll module out of scope", "Migration limited to open balances only", "Third-party integrations not listed are out of scope".</p>
+      <div class="callout callout-warning"><strong>The rule:</strong> anything not written as in-scope is out-of-scope by default. Any later request for an out-of-scope item follows the Change Request process — no exceptions, no verbal agreements.</div>
+
+      <!-- CHECKLIST -->
+      <h2>10. Quality Checklist</h2>
+      <h3>Before each phase sign-off</h3>
+      <ul>
+        <li>Phase milestone criteria met and demoed to the client.</li>
+        <li>Client sign-off obtained in writing before starting the next phase.</li>
+        <li>Tracker and Custom Feature Register updated.</li>
+      </ul>
+      <h3>Before any custom feature is built</h3>
+      <ul>
+        <li>Signed Feature Specification exists (objective, scope in/out, acceptance criteria).</li>
+        <li>Effort estimated; if &gt;20% over SOW → CR raised and approved.</li>
+      </ul>
+      <h3>Before any custom code reaches production</h3>
+      <ul>
+        <li>Staging test passed against acceptance criteria.</li>
+        <li>PM sign-off recorded; DB backup taken; rollback plan documented.</li>
+        <li>Code in dedicated app; no hardcoded credentials; no raw SQL; external calls wrapped with retry/idempotency.</li>
+      </ul>
+      <h3>Before go-live</h3>
+      <ul>
+        <li>All UAT Critical + Major issues resolved and retested.</li>
+        <li>Written UAT sign-off per feature from Functional Champion.</li>
+        <li>Opening Trial Balance signed off by client accountant before import.</li>
+        <li>Users trained and confirmed able to work independently.</li>
+        <li>Go-Live Acceptance Form signed by Business POC.</li>
+      </ul>
+
+      <!-- AUTOMATION -->
+      <h2>11. Automation &amp; AI Opportunities</h2>
+      <table>
+        <thead><tr><th>Opportunity</th><th>Benefit</th></tr></thead>
+        <tbody>
+          <tr><td>Auto weekly report from tracker data</td><td>Saves PM time; consistent format</td></tr>
+          <tr><td>Teams scheduling automation (3-day meeting, standup, Friday report)</td><td>No missed cadence</td></tr>
+          <tr><td>AI requirement-to-spec draft</td><td>Faster, more complete specs</td></tr>
+          <tr><td>AI meeting minutes → action items</td><td>Nothing lost; auto follow-up</td></tr>
+          <tr><td>Overdue-data bot (templates &gt;3 days late)</td><td>Removes manual chasing</td></tr>
+          <tr><td>UAT triage assist (severity from description)</td><td>Faster triage</td></tr>
+          <tr><td>Data template validation before import</td><td>Fewer import failures</td></tr>
+          <tr><td>Frappe-aware code review on every commit</td><td>Higher code quality; fewer prod bugs</td></tr>
+        </tbody>
+      </table>
+
+      <!-- KPIs -->
+      <h2>12. Key Performance Indicators</h2>
+      <table>
+        <thead><tr><th>KPI</th><th>Target</th><th>Why it matters</th></tr></thead>
+        <tbody>
+          <tr><td>On-time phase delivery</td><td>≥ 90%</td><td>Schedule reliability</td></tr>
+          <tr><td>On-time go-live</td><td>±1 week of plan</td><td>Predictability, client trust</td></tr>
+          <tr><td>Budget variance</td><td>≤ 10%</td><td>Profitability</td></tr>
+          <tr><td>Scope captured via CR</td><td>100%</td><td>No unpaid scope creep</td></tr>
+          <tr><td>Weekly report sent</td><td>100% of weeks</td><td>Customer experience</td></tr>
+          <tr><td>Client meeting cadence met</td><td>≥ 95% of 3-day slots</td><td>Communication consistency</td></tr>
+          <tr><td>UAT Critical/Major resolution</td><td>100% within SLA</td><td>Quality at go-live</td></tr>
+          <tr><td>Post-go-live Critical bugs</td><td>&lt; 2 in hypercare</td><td>Build quality</td></tr>
+          <tr><td>Client sign-off completeness</td><td>100%</td><td>Protects Enfono</td></tr>
+          <tr><td>AMC conversion</td><td>≥ 80%</td><td>Recurring revenue, scalability</td></tr>
+          <tr><td>CSAT at project close</td><td>≥ 4.5 / 5</td><td>Customer experience</td></tr>
+        </tbody>
+      </table>
+
+      <!-- MISTAKES -->
+      <h2>13. Common Mistakes to Avoid</h2>
+      <ul>
+        <li>Committing verbally — log it and route to a CR instead.</li>
+        <li>Building a custom feature with no signed spec. No spec, no code.</li>
+        <li>Skipping the written out-of-scope list at kickoff.</li>
+        <li>Importing the Opening Trial Balance without accountant sign-off.</li>
+        <li>Deploying custom code straight to production (no staging / backup / rollback).</li>
+        <li>Letting client data slip silently — chase weekly, escalate to POC if &gt;3 days late.</li>
+        <li>Going quiet — the weekly report and 3-day client meeting are non-negotiable.</li>
+        <li>Hardcoding credentials or using raw SQL in custom code.</li>
+        <li>Starting CR work before written client approval.</li>
+        <li>Closing the project without the signed Go-Live Acceptance Form and a support handover note.</li>
+        <li>Treating a Collaborated project like an Own one — keep the partner in the loop.</li>
+      </ul>
+
+      <!-- MONITORING -->
+      <h2>14. Daily / Weekly Monitoring</h2>
+      <table>
+        <thead><tr><th>Cadence</th><th>Activity</th><th>Owner</th></tr></thead>
+        <tbody>
+          <tr><td>Every working day</td><td>Team standup (15 min) — status of <strong>2 projects</strong> discussed</td><td>PM + team</td></tr>
+          <tr><td>Daily</td><td>PM ↔ FC sync — blockers, client relationship</td><td>PM + FC</td></tr>
+          <tr><td>Daily during UAT</td><td>Update UAT Issue Log; PM reviews severity triage</td><td>FC + PM</td></tr>
+          <tr><td>Daily, hypercare week</td><td>15-min client check-in call</td><td>FC</td></tr>
+          <tr><td><strong>Every 3 days</strong></td><td>Client meeting (scheduled in the project Teams group)</td><td>PM + FC</td></tr>
+          <tr><td>Every Monday</td><td>Weekly project plan</td><td>PM + FC</td></tr>
+          <tr><td>Every Friday</td><td>Weekly Project Report sent to customer; registers reviewed</td><td>PM / FC</td></tr>
+          <tr><td>Weekly</td><td>PM reports project status to management</td><td>PM</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout callout-tip">
+        <strong>Source documents:</strong> this SOP unifies Enfono's Complete Project Life Cycle SOP (Own/Collaborated + AMC) and SOP-ERP-001 v1.1 (the PM/FC/TL implementation playbook), plus the 2026 additions — project Teams group, 3-day client meeting, daily 2-project standup, weekly plan, weekly customer report, and explicit out-of-scope definition. Branded DOCX (full + quick-start) versions are maintained alongside.
+      </div>
+
+      <p style="color:var(--text-light);font-size:13px;margin-top:24px;">Enfono Project Delivery SOP · SOP-ERP-002 · Version 2.0 · Internal Use Only · Reviewed annually.</p>
+
+    </main>
+  </div>
+  <script src="../js/nav.js"></script>
+</body>
+</html>
