@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Support &amp; AMC (SOP-ERP-002-C · SLA-ERP-001) — Enfono Resources</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .owner { display:inline-block; font-family:"SFMono-Regular",Consolas,monospace; font-size:11px; font-weight:700; color:var(--accent); background:#fef2f4; padding:1px 7px; border-radius:5px; margin-right:7px; }
+    .pri { font-weight:700; } .pri.p1 { color:#dc2626; } .pri.p2 { color:#d97706; } .pri.p3 { color:#16a34a; } .pri.p4 { color:#64748b; }
+    .flow { display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin:14px 0; }
+    .flow .node { background:#1a1a2e; color:#fff; font-size:12.5px; font-weight:600; padding:7px 13px; border-radius:8px; }
+    .flow .arr { color:var(--accent); font-weight:700; }
+    h2 { scroll-margin-top:16px; } h3 { scroll-margin-top:16px; }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-brand"><h2>🔧 Enfono Resources</h2></div>
+      <div class="sidebar-search"><input type="text" id="nav-search" placeholder="Search pages..."></div>
+      <ul class="nav-list" id="nav-list">
+        <li><a href="/" class="nav-link">Home</a></li>
+        <li><a href="project-delivery-sop.html" class="nav-link">Project Delivery SOP</a></li>
+        <li><a href="project-onboarding-checklist.html" class="nav-link">Onboarding Checklist</a></li>
+        <li><a href="project-weekly-checklist.html" class="nav-link">Weekly Checklist</a></li>
+        <li><a href="project-closure-checklist.html" class="nav-link">Closure Checklist</a></li>
+        <li><a href="project-support-amc.html" class="nav-link active">Support &amp; AMC</a></li>
+      </ul>
+    </nav>
+
+    <main class="content">
+      <h1>Support &amp; AMC</h1>
+      <p>
+        <strong>SOP-ERP-002-C + SLA-ERP-001 · Internal Use Only.</strong> Life after go-live — hypercare, the Annual
+        Maintenance Contract, the support process, and service levels. Targets below are the Enfono standard; the signed
+        AMC contract may tune coverage, hours, and targets per client. Part C of the
+        <a href="project-delivery-sop.html">Project Delivery SOP</a>.
+      </p>
+
+      <div class="callout callout-info">
+        <strong>Boundary:</strong> defects, configuration help, and break-fix on delivered scope are <strong>SUPPORT</strong>
+        (covered by AMC). New features, modules, or scope beyond the signed BRD are <strong>CHANGE REQUESTS</strong>
+        (separately quoted) — never absorbed silently as support.
+      </div>
+
+      <h2 id="s1">1. Hypercare</h2>
+      <p>First weeks live (Wk 10–12 or as contracted).</p>
+      <ul>
+        <li><span class="owner">FC</span>Daily 15-min client check-in during the first live week; handle queries + minor issues.</li>
+        <li><span class="owner">PM+FC</span>Respond to Critical production issues within 2 business hours; all new requests → Change Request.</li>
+        <li><span class="owner">PM</span>Weekly hypercare status summary to the client POC.</li>
+      </ul>
+
+      <h2 id="s2">2. AMC Scope</h2>
+      <table>
+        <thead><tr><th>Included (AMC support)</th><th>Excluded (Change Request / separate)</th></tr></thead>
+        <tbody>
+          <tr><td>Break-fix on delivered features</td><td>New features, modules, or DocTypes</td></tr>
+          <tr><td>Configuration help + minor tweaks</td><td>Scope beyond the signed BRD</td></tr>
+          <tr><td>Bug fixes + error investigation</td><td>Data migration of new datasets</td></tr>
+          <tr><td>Version / security patching (planned)</td><td>Third-party integrations not in scope</td></tr>
+          <tr><td>User how-to + guidance</td><td>Net-new reports / print formats</td></tr>
+          <tr><td>Monthly health check + report</td><td>Bulk training for net-new staff</td></tr>
+        </tbody>
+      </table>
+      <p>AMC scope, duration, SLAs, and commercials are defined in the maintenance agreement signed at completion (tracked on the <a href="project-closure-checklist.html">Closure Checklist</a>).</p>
+
+      <h2 id="s3">3. Support Process</h2>
+      <div class="flow">
+        <span class="node">Intake</span><span class="arr">▶</span>
+        <span class="node">Triage + priority</span><span class="arr">▶</span>
+        <span class="node">Resolve (L1→L2)</span><span class="arr">▶</span>
+        <span class="node">Verify with client</span><span class="arr">▶</span>
+        <span class="node">Report</span>
+      </div>
+      <ul>
+        <li><span class="owner">FC</span>Intake + triage: log every request via the agreed channel, set priority, apply known fixes (L1).</li>
+        <li><span class="owner">TL</span>Resolve code/data issues (L2); deploy fixes via staging → backup → production.</li>
+        <li><span class="owner">PM</span>Own SLA adherence, escalations, and the monthly support report.</li>
+      </ul>
+
+      <h2 id="s4">4. Coverage</h2>
+      <table>
+        <thead><tr><th>Item</th><th>Standard</th></tr></thead>
+        <tbody>
+          <tr><td>Support hours</td><td>Business hours, Sunday–Thursday 09:00–18:00 (client local), excluding public holidays</td></tr>
+          <tr><td>Channels</td><td>Project Microsoft Teams group (primary) · support email · ticket log</td></tr>
+          <tr><td>Critical after-hours</td><td>Best-effort outside hours for Critical only (24×7 if contracted in the AMC)</td></tr>
+          <tr><td>Language</td><td>English / Arabic</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="s5">5. Priority Definitions</h2>
+      <table>
+        <thead><tr><th>Priority</th><th>Definition</th><th>Examples</th></tr></thead>
+        <tbody>
+          <tr><td class="pri p1">Critical (P1)</td><td>System down or core business stopped; no workaround</td><td>Cannot post invoices · login down · wrong GL/stock · site offline</td></tr>
+          <tr><td class="pri p2">High (P2)</td><td>Key function broken; workaround exists</td><td>A report fails · one workflow blocked · print format broken</td></tr>
+          <tr><td class="pri p3">Medium (P3)</td><td>Minor function impaired; limited impact</td><td>Rounding quirk · non-blocking validation · single-user issue</td></tr>
+          <tr><td class="pri p4">Low (P4)</td><td>How-to, request, or cosmetic</td><td>Usage question · label change · small tweak</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="s6">6. SLA Targets</h2>
+      <p>Clocks run during support hours only. Response = acknowledge + begin; Resolution = fix or accepted workaround.</p>
+      <table>
+        <thead><tr><th>Priority</th><th>Response</th><th>Resolution / workaround</th><th>Update cadence</th></tr></thead>
+        <tbody>
+          <tr><td class="pri p1">Critical</td><td>1 business hour</td><td>4 business hours</td><td>Hourly until resolved</td></tr>
+          <tr><td class="pri p2">High</td><td>2 business hours</td><td>1 business day</td><td>Twice daily</td></tr>
+          <tr><td class="pri p3">Medium</td><td>4 business hours</td><td>3 business days</td><td>Daily</td></tr>
+          <tr><td class="pri p4">Low</td><td>1 business day</td><td>5 business days / next cycle</td><td>On change</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="s7">7. Escalation Matrix</h2>
+      <table>
+        <thead><tr><th>Level</th><th>Owner</th><th>Triggers when</th></tr></thead>
+        <tbody>
+          <tr><td><strong>L1 — First response</strong></td><td>Functional Consultant</td><td>Ticket raised; triage + known fixes</td></tr>
+          <tr><td><strong>L2 — Technical</strong></td><td>Technical Lead</td><td>Needs code/data fix, or L1 target at risk</td></tr>
+          <tr><td><strong>L3 — Management</strong></td><td>Project Manager</td><td>Critical breached, dispute, or repeated misses</td></tr>
+          <tr><td><strong>L4 — Escalation</strong></td><td>Delivery Manager</td><td>P1 unresolved past 2× target, or client escalation</td></tr>
+        </tbody>
+      </table>
+      <div class="callout callout-warning">
+        <strong>Support vs Change Request:</strong> defects + config help on delivered scope = support (AMC). New features /
+        scope beyond the signed BRD = Change Request, separately quoted — never absorbed silently.
+      </div>
+
+      <h2 id="s8">8. Support KPIs</h2>
+      <table>
+        <thead><tr><th>KPI</th><th>Target</th></tr></thead>
+        <tbody>
+          <tr><td>SLA adherence (response + resolution)</td><td>≥ 95%</td></tr>
+          <tr><td>Critical resolved within target</td><td>100%</td></tr>
+          <tr><td>Reopened tickets</td><td>&lt; 5%</td></tr>
+          <tr><td>Monthly support report sent</td><td>100% of months</td></tr>
+          <tr><td>AMC renewal rate</td><td>≥ 80%</td></tr>
+          <tr><td>Support CSAT</td><td>≥ 4.5 / 5</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout callout-tip" style="margin-top:24px;">
+        Printable (Cmd/Ctrl+P) and self-contained. Branded DOCX (SOP-ERP-002-C + SLA-ERP-001) maintained alongside.
+      </div>
+    </main>
+  </div>
+  <script src="../js/nav.js"></script>
+</body>
+</html>
