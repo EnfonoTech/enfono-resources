@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Closure Checklist (CHK-ERP-002) — Enfono Resources</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .owner { display:inline-block; font-family:"SFMono-Regular",Consolas,monospace; font-size:11px; font-weight:700; color:var(--accent); background:#fef2f4; padding:1px 7px; border-radius:5px; margin-right:7px; vertical-align:1px; }
+    .progress-box { background:#1a1a2e; color:#fff; border-radius:12px; padding:18px 20px; margin:18px 0 8px; }
+    .progress-box .row { display:flex; justify-content:space-between; font-size:13px; color:#c8cfe8; margin-bottom:8px; }
+    .progress-box .row b { color:#fff; }
+    .ptrack { height:9px; border-radius:20px; background:rgba(255,255,255,.14); overflow:hidden; }
+    .pbar { height:100%; width:0; border-radius:20px; background:linear-gradient(90deg,var(--accent),var(--accent-light)); transition:width .35s ease; }
+    .reset-btn { margin-top:12px; font-size:12px; font-weight:600; color:#fff; background:rgba(233,69,96,.35); border:1px solid rgba(233,69,96,.6); padding:5px 12px; border-radius:7px; cursor:pointer; }
+    .reset-btn:hover { background:rgba(233,69,96,.55); }
+    .ck-list { list-style:none; margin:10px 0 0; padding:0; }
+    .ck-item { display:flex; gap:11px; align-items:flex-start; background:#fff; border:1px solid var(--border); border-radius:10px; padding:11px 15px; margin-bottom:8px; cursor:pointer; transition:border-color .15s, background .15s; }
+    .ck-item:hover { border-color:var(--accent-light); }
+    .ck-item input { position:absolute; opacity:0; width:0; height:0; }
+    .ck-item .box { width:20px; height:20px; border:2px solid #cbd2d9; border-radius:6px; flex-shrink:0; margin-top:1px; display:flex; align-items:center; justify-content:center; background:#fff; transition:all .15s; }
+    .ck-item .box::after { content:""; width:6px; height:11px; border:solid #fff; border-width:0 3px 3px 0; transform:rotate(45deg) scale(0); transition:transform .12s; margin-bottom:2px; }
+    .ck-item .lbl { font-size:14px; color:#374151; line-height:1.5; }
+    .ck-item.done { background:#fef6f7; border-color:#f6c9d2; }
+    .ck-item.done .box { background:var(--accent); border-color:var(--accent); }
+    .ck-item.done .box::after { transform:rotate(45deg) scale(1); }
+    .ck-item.done .lbl { color:#9aa3ad; text-decoration:line-through; text-decoration-color:#cbd2d9; }
+    .ck-item.done .owner { color:#9aa3ad; background:#f1f5f9; }
+    .ck-item.gate { border-color:#f59e0b; background:#fffbeb; }
+    .ck-item.gate.done .box { background:#f59e0b; border-color:#f59e0b; }
+    .when-tag { font-size:12px; font-weight:600; color:#94a3b8; background:#f1f5f9; padding:2px 9px; border-radius:20px; margin-left:8px; vertical-align:2px; }
+    h2 { scroll-margin-top:16px; }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-brand"><h2>🔧 Enfono Resources</h2></div>
+      <div class="sidebar-search"><input type="text" id="nav-search" placeholder="Search pages..."></div>
+      <ul class="nav-list" id="nav-list">
+        <li><a href="/" class="nav-link">Home</a></li>
+        <li><a href="project-delivery-sop.html" class="nav-link">Project Delivery SOP</a></li>
+        <li><a href="project-onboarding-checklist.html" class="nav-link">Onboarding Checklist</a></li>
+        <li><a href="project-weekly-checklist.html" class="nav-link">Weekly Checklist</a></li>
+        <li><a href="project-closure-checklist.html" class="nav-link active">Closure Checklist</a></li>
+        <li><a href="project-support-amc.html" class="nav-link">Support &amp; AMC</a></li>
+      </ul>
+    </nav>
+
+    <main class="content">
+      <h1>Project Closure Checklist</h1>
+      <p>
+        <strong>CHK-ERP-002 · v1.0 · Internal Use Only.</strong> Run once scope is delivered and the client is ready to
+        accept — through final UAT, acceptance, handover, commercial closure, and into the AMC. Companion to the
+        <a href="project-delivery-sop.html">Project Delivery SOP</a>. Tick items as you go; progress saves in this browser.
+      </p>
+
+      <div class="callout callout-info">
+        <strong>Owner tags:</strong> <code>[PM]</code> Project Manager · <code>[FC]</code> Functional Consultant ·
+        <code>[TL]</code> Technical Lead. Any new request raised during closure → logged as a Change Request or support ticket, never absorbed into the close.
+      </div>
+
+      <div class="progress-box">
+        <div class="row"><span><b id="pdone">0</b> of <span id="ptotal">0</span> done</span><span id="ppct">0%</span></div>
+        <div class="ptrack"><div class="pbar" id="pbar"></div></div>
+        <button class="reset-btn" id="reset" type="button">Reset checklist</button>
+      </div>
+
+      <h2 id="s1">1. UAT &amp; Acceptance <span class="when-tag">pre-close</span></h2>
+      <ul class="ck-list">
+        <li><label class="ck-item"><input type="checkbox"><span class="box"></span><span class="lbl"><span class="owner">PM</span>All UAT Critical and Major issues resolved and retested.</span></label></li>
+        <li><label class="ck-item"><input type="checkbox"><span class="box"></span><span class="lbl"><span class="owner">FC</span>Written UAT sign-off obtained per feature from the Functional Champion.</span></label></li>
+        <li><label class="ck-item"><input type="checkbox"><span class="box"></span><span class="lbl"><span class="owner">PM</span>Go-Live Acceptance Form signed by the Business POC.</span></label></li>
+        <li><label class="ck-item"><input type="checkbox"><span class="box"></span><span class="lbl"><span class="owner">PM</span>Open Minor issues listed + agreed (fix post-go-live or next cycle).</span></label></li>
+      </ul>
+
+      <h2 id="s2">2. Data &amp; Cutover <span class="when-tag">go-live</span></h2>
+      <ul class="ck-list">
+        <li><label class="ck-item"><input type="checkbox"><span class="box"></span><span class="lbl"><span class="owner">TL</span>Final data migrated as of cut-off; opening balances + stock reconciled with the client.</span></label></li>
+        <li><label class="ck-item"><input type="checkbox"><span class="box"></span><span class="lbl"><span class="owner">FC</span>Opening Trial Balance confirmed signed by the client accountant.</span></label></li>
+        <li><label class="ck-item"><input type="checkbox"><span class="box"></span><span class="lbl"><span class="owner">PM+FC</span>Legacy system frozen; cutover communicated; decommission date agreed.</span></label></li>
+        <li><label class="ck-item"><input type="checkbox"><span class="box"></span><span class="lbl"><span class="owner">TL</span>Production smoke-tested; error log clean after go-live.</span></label></li>
+      </ul>
+
+      <h2 id="s3">3. Training &amp; Handover <span class="when-tag">go-live</span></h2>
+      <ul class="ck-list">
+        <li><label class="ck-item"><input type="checkbox"><span class="box"></span><span class="lbl"><span class="owner">FC</span>Operations + finance/manager training delivered; recordings + user guide shared.</span></label></li>
+        <li><label class="ck-item"><input type="checkbox"><span class="box"></span><span class="lbl"><span class="owner">FC</span>Users confirmed able to work independently (no shadow support needed).</span></label></li>
+        <li><label class="ck-item"><input type="checkbox"><span class="box"></span><span class="lbl"><span class="owner">FC</span>Support-handover note written — custom features, known limitations, open minors, key contacts.</span></label></li>
+        <li><label class="ck-item"><input type="checkbox"><span class="box"></span><span class="lbl"><span class="owner">TL</span>Server/site access + credentials handed to client IT (stored in client vault).</span></label></li>
+      </ul>
+
+      <h2 id="s4">4. Documentation &amp; Archival <span class="when-tag">close</span></h2>
+      <ul class="ck-list">
+        <li><label class="ck-item"><input type="checkbox"><span class="box"></span><span class="lbl"><span class="owner">PM</span>All project docs archived — contract, BRD, specs, CRs, UAT log, deployment logs.</span></label></li>
+        <li><label class="ck-item"><input type="checkbox"><span class="box"></span><span class="lbl"><span class="owner">FC</span>Custom Feature Register finalised (every feature: spec → built → UAT → deployed).</span></label></li>
+        <li><label class="ck-item"><input type="checkbox"><span class="box"></span><span class="lbl"><span class="owner">PM</span>Risk Register closed; carried risks moved to the support log.</span></label></li>
+      </ul>
+
+      <h2 id="s5">5. Commercial Closure <span class="when-tag">close</span></h2>
+      <ul class="ck-list">
+        <li><label class="ck-item"><input type="checkbox"><span class="box"></span><span class="lbl"><span class="owner">PM</span>Final milestone invoiced.</span></label></li>
+        <li><label class="ck-item"><input type="checkbox"><span class="box"></span><span class="lbl"><span class="owner">PM</span>All payments reconciled; outstanding cleared or a written plan agreed.</span></label></li>
+        <li><label class="ck-item"><input type="checkbox"><span class="box"></span><span class="lbl"><span class="owner">PM</span>Out-of-scope / Change Request items billed and settled.</span></label></li>
+      </ul>
+
+      <h2 id="s6">6. AMC Transition <span class="when-tag">handoff</span></h2>
+      <ul class="ck-list">
+        <li><label class="ck-item"><input type="checkbox"><span class="box"></span><span class="lbl"><span class="owner">PM</span>AMC agreement signed — scope, duration, SLAs, and commercials defined.</span></label></li>
+        <li><label class="ck-item"><input type="checkbox"><span class="box"></span><span class="lbl"><span class="owner">FC</span>Support channels + Support SLA shared with the client (see <a href="project-support-amc.html">Support &amp; AMC</a>).</span></label></li>
+        <li><label class="ck-item"><input type="checkbox"><span class="box"></span><span class="lbl"><span class="owner">PM</span>AMC start date set; renewal reminder scheduled.</span></label></li>
+        <li><label class="ck-item"><input type="checkbox"><span class="box"></span><span class="lbl"><span class="owner">FC</span>Support intake (Teams group / email / ticket) set up and tested with the client.</span></label></li>
+      </ul>
+
+      <h2 id="s7">7. Project Close &amp; Retrospective <span class="when-tag">close</span></h2>
+      <ul class="ck-list">
+        <li><label class="ck-item"><input type="checkbox"><span class="box"></span><span class="lbl"><span class="owner">PM+FC</span>Post-implementation review held with the Business POC.</span></label></li>
+        <li><label class="ck-item"><input type="checkbox"><span class="box"></span><span class="lbl"><span class="owner">PM</span>Lessons-learned / retro logged (what worked, what to improve).</span></label></li>
+        <li><label class="ck-item"><input type="checkbox"><span class="box"></span><span class="lbl"><span class="owner">FC</span>Client satisfaction (CSAT) captured.</span></label></li>
+        <li><label class="ck-item"><input type="checkbox"><span class="box"></span><span class="lbl"><span class="owner">PM</span>Project formally closed in the tracker; team released.</span></label></li>
+      </ul>
+
+      <h2 id="s8">8. Final Closure Gate <span class="when-tag">sign-off</span></h2>
+      <ul class="ck-list">
+        <li><label class="ck-item"><input type="checkbox"><span class="box"></span><span class="lbl">Acceptance signed · data reconciled · training done · docs archived.</span></label></li>
+        <li><label class="ck-item"><input type="checkbox"><span class="box"></span><span class="lbl">Final invoice raised · AMC signed · support live.</span></label></li>
+        <li><label class="ck-item gate"><input type="checkbox"><span class="box"></span><span class="lbl"><span class="owner">PM</span><strong>SIGN-OFF:</strong> PM confirms the project is CLOSED and transitioned to AMC / Support.</span></label></li>
+      </ul>
+
+      <div class="callout callout-tip" style="margin-top:24px;">
+        Printable (Cmd/Ctrl+P) and self-contained. Full process detail lives in the
+        <a href="project-delivery-sop.html">Project Delivery SOP</a> (SOP-ERP-002-B).
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/nav.js"></script>
+  <script>
+    (function(){
+      var KEY = "enfono-closure-chk-v1";
+      var items = Array.prototype.slice.call(document.querySelectorAll('.ck-item input'));
+      var bar = document.getElementById('pbar'), pdone = document.getElementById('pdone'),
+          ptotal = document.getElementById('ptotal'), ppct = document.getElementById('ppct');
+      ptotal.textContent = items.length;
+      function save(){ var s={}; items.forEach(function(inp,i){ if(inp.checked) s[i]=1; }); try{ localStorage.setItem(KEY, JSON.stringify(s)); }catch(e){} }
+      function update(){ var d=items.filter(function(i){return i.checked;}).length; var p=items.length?Math.round(d/items.length*100):0; bar.style.width=p+"%"; pdone.textContent=d; ppct.textContent=p+"%"; }
+      function load(){ var s={}; try{ s=JSON.parse(localStorage.getItem(KEY)||"{}"); }catch(e){} items.forEach(function(inp,i){ inp.checked=!!s[i]; inp.closest('.ck-item').classList.toggle('done', inp.checked); }); update(); }
+      items.forEach(function(inp){ inp.addEventListener('change', function(){ inp.closest('.ck-item').classList.toggle('done', inp.checked); save(); update(); }); });
+      document.getElementById('reset').addEventListener('click', function(){ items.forEach(function(inp){ inp.checked=false; inp.closest('.ck-item').classList.remove('done'); }); save(); update(); });
+      load();
+    })();
+  </script>
+</body>
+</html>
